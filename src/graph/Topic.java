@@ -7,6 +7,7 @@ public class Topic {
     public final String name;
     protected List<Agent> sub;
     protected List<Agent> pub;
+    private Message lastMessage;
 
     Topic(String name){
         if (name == null){
@@ -27,6 +28,7 @@ public class Topic {
     }
 
     public void publish(Message m){
+        lastMessage=m;
         for(Agent a:sub){
             a.callback(name, m);
         }
@@ -42,5 +44,15 @@ public class Topic {
             pub.remove(a);
     }
 
+    public Message getMsg(){
+        return lastMessage;
+    }
 
+    public List<Agent> getPub() {
+        return pub;
+    }
+
+    public List<Agent> getSub() {
+        return sub;
+    }
 }

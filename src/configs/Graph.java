@@ -1,93 +1,95 @@
 package configs;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import java.util.*;
-
 import graph.Topic;
 import graph.TopicManagerSingleton;
 import graph.TopicManagerSingleton.TopicManager;
 import graph.Agent;
 
 
+
 public class Graph extends ArrayList<Node>{
 
-    private HashMap<String,Node> nodeHashMap;
+    private HashMap<String,Node> nodeMap;
 
     public Graph() {
         super();
-        nodeHashMap = new HashMap<>();
+        nodeMap = new HashMap<>();
     }
     public boolean hasCycles() {
         for (Node node : this) {
-            if (hasCyclesMine(node,new HashSet<>(),new HashSet<>())){
+            if (hasCyclesHelper(node,new HashSet<>(),new HashSet<>())){
                 return true;
             }
         }
+        return false;
     }
     public void createFromTopics(){
         this.clear();
-        nodeHashMap.clear();
+        nodeMap.clear();
 
         TopicManager topicMen=TopicManagerSingleton.get();
         Collection<Topic> topics = topicMen.getTopics();
 
-        for(Topic t:topics){
-            String topicNodeName="T" + t.name;
-            Node topicNode= nodeHashMap.computeIfAbsent(topicNodeName,Node::new);
+        for(Topic topic:topics){
+            String topicNodeName="T" + topic.name;
+            Node topicNode= nodeMap.computeIfAbsent(topicNodeName,Node::new);
             this.add(topicNode);
         }
 
-        for (Topic t:topics){
-            String topicNodeName="T" + t.name;
-            Node topicNode= nodeHashMap.get(topicNodeName);
+        for (Topic topic:topics){
+            String topicNodeName="T" + topic.name;
+            Node topicNode= nodeMap.get(topicNodeName);
 
             if (topicNode==null){
-                throw new IllegalStateException("The topic " + t.name + " does not exist");
+                throw new IllegalStateException("The topic " + topic.name + " does not exist");
             }
 
-            for (Agent subscribe: topics.getSub())
+            for (Agent subscribe: topic.getSub())
             {
                 Node subscriberNode=findOrCreatAgentNode(subscribe);
                 topicNode.addEdge(subscriberNode);
             }
 
-            for (Agent publisher: topics.getPubs())
+            for (Agent publish: topic.getPub())
             {
-                Node publisherNode=findOrCreatAgentNode(publisher);
+                Node publisherNode=findOrCreatAgentNode(publish);
                 publisherNode.addEdge(topicNode);
             }
         }
 
-
-    }
-
-    private Node findOrCreatAgentNode(Agent agent) {
+    } private Node findOrCreatAgentNode(Agent agent) {
         String agentNodeName="A"+agent.getName();
-        Node node=nodeHashMap.get(agentNodeName);
+        Node node=nodeMap.get(agentNodeName);
         if (node==null){
             node=new Node(agentNodeName);
             this.add(node);
-            nodeHashMap.put(agentNodeName,node);
+            nodeMap.put(agentNodeName,node);
         }
         return node;
     }
-    private Boolean hasCyclesMine(Node node, Set<Node> visited, Set<Node> stack) {
-        if (visited.contains(node)) {
+
+
+    private boolean hasCyclesHelper(Node curr, Set<Node> visited, Set<Node> stack) {
+        if (stack.contains(curr)) {
             return true;
         }
-        if (stack.contains(node)) {
+        if (visited.contains(curr)) {
             return false;
         }
-        visited.add(node);
-        stack.add(node);
-        for (Node no: current.getAdges())
-        {
-            if (hasCyclesMine(no,visited,stack))
-            {
+        visited.add(curr);
+        stack.add(curr);
+
+        for (Node neighbor : curr.getEdges()){
+            if (hasCyclesHelper(neighbor, visited, stack)) {
                 return true;
             }
         }
-        stack.remove(node);
+        stack.remove(curr);
         return false;
     }
+
 
 }

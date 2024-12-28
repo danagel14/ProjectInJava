@@ -11,12 +11,12 @@ import graph.TopicManagerSingleton.TopicManager;
 
 
 public class BinOpAgent{
-    private Agent agent;
+    private Agent a;
     private String agentName;
     private String firstNameTopic;
     private String secondNameTopic;
-    private String outTopicName;
-    private BinaryOperator<Double> function;
+    private String outputTopicName;
+    private BinaryOperator<Double> func;
 
     public BinOpAgent(String agentName,String firstNameTopic,String secondNameTopic,String outTopicName,BinaryOperator<Double> function){
         TopicManager topicMen=TopicManagerSingleton.get();
@@ -27,13 +27,14 @@ public class BinOpAgent{
         if (firstTopic==null || secondTopic==null||outTopic==null){
                 throw new IllegalArgumentException("Cannot be null");
         }
+
         this.agentName=agentName;
         this.firstNameTopic=firstNameTopic;
         this.secondNameTopic=secondNameTopic;
-        this.outTopicName=outTopicName;
-        this.function=function;
+        this.outputTopicName =outTopicName;
+        this.func=func;
 
-        this.agent =new Agent() {
+        this.a =new Agent() {
             @Override
             public String getName() {
                 return "";
@@ -69,9 +70,9 @@ public class BinOpAgent{
 
         };
 
-        firstTopic.subscribe(this.agent);
-        secondTopic.subscribe(this.agent);
-        outTopic.subscribe(this.agent);
+        firstTopic.subscribe(this.a);
+        secondTopic.subscribe(this.a);
+        outTopic.subscribe(this.a);
     }
 
 
@@ -82,9 +83,9 @@ public class BinOpAgent{
 
     public void closeAgent(){
         TopicManager topicMen=TopicManagerSingleton.get();
-        topicMen.getTopic(firstNameTopic).unsubscribe(this.agent);
-        topicMen.getTopic(secondNameTopic).unsubscribe(this.agent);
-        topicMen.getTopic(outTopicName).removePublisher(this.agent);
+        topicMen.getTopic(firstNameTopic).unsubscribe(this.a);
+        topicMen.getTopic(secondNameTopic).unsubscribe(this.a);
+        topicMen.getTopic(outputTopicName).removePublisher(this.a);
     }
 
 }
