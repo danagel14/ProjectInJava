@@ -3,7 +3,9 @@ package configs;
 import graph.Message;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class Node {
@@ -33,7 +35,7 @@ public class Node {
     public Message getMsg() {
         return msg;
     }
-    public void setMsg(Message msg) {
+    public void setMsg(graph.Message msg) {
         this.msg = msg;
     }
 
@@ -41,7 +43,9 @@ public class Node {
         this.edges.add(node);
     }
     public Boolean hasCycles(){
-
+        Set<Node> visited = new HashSet<>();
+        Set<Node> stack = new HashSet<>();
+        return hasCyclesMine(this,visited,stack);
     }
 
 
