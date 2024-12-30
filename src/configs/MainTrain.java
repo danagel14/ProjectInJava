@@ -1,11 +1,17 @@
-package test;
+package configs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import test.TopicManagerSingleton.TopicManager;
+
+
+import graph.TopicManagerSingleton.TopicManager;
+import graph.TopicManagerSingleton;
+import graph.Agent;
+import graph.Message;
+
 
 public class MainTrain {
 
@@ -16,25 +22,25 @@ public class MainTrain {
             }
         }
         return false;
-    }    
+    }
 
     public static void testCycles(){
         Node a = new Node("A");
         Node b = new Node("B");
         Node c = new Node("C");
         Node d = new Node("D");
-    
+
         a.addEdge(b);
         b.addEdge(c);
         c.addEdge(d);
-    
+
         // Create a graph
         List<Node> graph = new ArrayList<>();
         graph.add(a);
         graph.add(b);
         graph.add(c);
         graph.add(d);
-    
+
         // Check if the graph has cycles
         boolean hasCycles = hasCycles(graph);
         if(hasCycles)
@@ -44,7 +50,7 @@ public class MainTrain {
         hasCycles = hasCycles(graph);
         if(!hasCycles)
             System.out.println("wrong answer for hasCycles when there is a cycle (-10)");
-        
+
     }
 
     public static class GetAgent implements Agent{
@@ -87,7 +93,7 @@ public class MainTrain {
 
         if (Math.abs(rslt - ga.msg.asDouble)>0.05)
             System.out.println("your BinOpAgents did not produce the desired result (-20)");
-        
+
 
     }
 
@@ -101,7 +107,7 @@ public class MainTrain {
 
         if(g.size()!=8)
             System.out.println("the graph you created from topics is not in the right size (-10)");
-        
+
         List<String> l=Arrays.asList("TA","TB","Aplus","Aminus","TR1","TR2","Amul","TR3");
         boolean b=true;
         for(Node n  : g){

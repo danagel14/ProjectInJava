@@ -2,7 +2,8 @@ package graph;
 
 import java.util.Random;
 
-import test.TopicManagerSingleton.TopicManager;
+
+import graph.TopicManagerSingleton.TopicManager;
 
 public class MainTrain { // simple tests to get you going...
 
@@ -25,9 +26,9 @@ public class MainTrain { // simple tests to get you going...
             System.out.println("Error: String constructor - date should not be null (-5)");
         }
 
-    }    
+    }
 
-    public static  abstract class AAgent implements Agent{
+    public static  abstract class AAgent implements Agent {
         public void reset() {}
         public void close() {}
         public String getName(){
@@ -39,50 +40,50 @@ public class MainTrain { // simple tests to get you going...
 
         double sum=0;
         int count=0;
-        TopicManager tm=TopicManagerSingleton.get();
+        TopicManager tm= TopicManagerSingleton.get();
 
         public TestAgent1(){
             tm.getTopic("Numbers").subscribe(this);
         }
 
         @Override
-        public void callback(Message msg) {
+        public void callback(String topic, Message msg) {
             count++;
             sum+=msg.asDouble;
-            
+
             if(count%5==0){
                 tm.getTopic("Sum").publish(new Message(sum));
                 count=0;
             }
 
         }
-        
+
     }
 
     public static class TestAgent2 extends AAgent{
 
         double sum=0;
-        TopicManager tm=TopicManagerSingleton.get();
+        TopicManager tm= TopicManagerSingleton.get();
 
         public TestAgent2(){
             tm.getTopic("Sum").subscribe(this);
         }
 
         @Override
-        public void callback(Message msg) {
+        public void callback(String topic, Message msg) {
             sum=msg.asDouble;
         }
 
         public double getSum(){
             return sum;
         }
-        
+
     }
 
-    public static void testAgents(){        
-        TopicManager tm=TopicManagerSingleton.get();
+    public static void testAgents(){
+        TopicManager tm= TopicManagerSingleton.get();
         TestAgent1 a=new TestAgent1();
-        TestAgent2 a2=new TestAgent2();        
+        TestAgent2 a2=new TestAgent2();
         double sum=0;
         for(int c=0;c<3;c++){
             Topic num=tm.getTopic("Numbers");
@@ -101,10 +102,10 @@ public class MainTrain { // simple tests to get you going...
         a2.close();
     }
 
-        
+
     public static void main(String[] args) {
         testMessage();
-        testAgents();        
+        testAgents();
         System.out.println("done");
     }
 }

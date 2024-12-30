@@ -1,38 +1,36 @@
-
 package graph;
+
 import java.util.Date;
 
-public class Message {
+public final class Message {
     public final byte[] data;
     public final String asText;
     public final double asDouble;
     public final Date date;
 
-    public Message(String str){
-        if(str == null){
-            throw new  IllegalArgumentException("Null String");
+    public Message(String str) {
+        if (str == null) {
+            throw new IllegalArgumentException("String cannot be null");
         }
         this.data = str.getBytes();
         this.asText = str;
+        this.asDouble = parseDoubleSafely(str);
         this.date = new Date();
-        this.asDouble = parseDouble(str);
     }
 
-    public Message(double num){
-        this(Double.toString(num));
+    public Message(byte[] bytes) {
+        this(new String(bytes));
     }
 
-    public Message(byte[] b){
-        this(new String(b));
+    public Message(double d) {
+        this(Double.toString(d));
     }
 
-    private static double parseDouble(String str) {
-        try{
+    private static double parseDoubleSafely(String str) {
+        try {
             return Double.parseDouble(str);
-        }
-        catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return Double.NaN;
         }
     }
-
 }

@@ -1,58 +1,53 @@
 package graph;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Topic {
     public final String name;
-    protected List<Agent> sub;
-    protected List<Agent> pub;
+    private final List<Agent> subs = new CopyOnWriteArrayList<>();
+    private final List<Agent> pubs = new CopyOnWriteArrayList<>();
     private Message lastMessage;
 
-    Topic(String name){
-        if (name == null){
-            throw new IllegalArgumentException("name cannot be null");
+    public Topic(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Topic name cannot be null or empty");
         }
-        this.name=name;
-        this.sub=new ArrayList<>();
-        this.pub=new ArrayList<>();
+        this.name = name;
     }
 
-    public void subscribe(Agent a){
-        if (!sub.contains(a)){
-            sub.add(a);
-        }
-    }
-    public void unsubscribe(Agent a){
-        sub.remove(a);
-    }
-
-    public void publish(Message m){
-        lastMessage=m;
-        for(Agent a:sub){
-            a.callback(name, m);
+    public void subscribe(Agent agent) {
+        if (!subs.contains(agent)) {
+            subs.add(agent);
         }
     }
 
+    public void unsubscribe(Agent agent) {
+        subs.remove(agent);
+    }
+
+    public void publish(Message message) {
+        lastMessage = message;
+        for (Agent agent : subs) {
+            agent.callback(this.name, message);
+        }
+    }
     public void addPublisher(Agent a){
-        if (!pub.contains(a)){
-            pub.add(a);
+        if (!pubs.contains(a)) {
+            pubs.add(a);
         }
     }
 
     public void removePublisher(Agent a){
-            pub.remove(a);
+        pubs.remove(a);
     }
-
-    public Message getMsg(){
+    public Message getMsg() {
         return lastMessage;
     }
-
-    public List<Agent> getPub() {
-        return pub;
+    public List<Agent> getSubs() {
+        return subs;
     }
-
-    public List<Agent> getSub() {
-        return sub;
+    public List<Agent> getPubs() {
+        return pubs;
     }
 }

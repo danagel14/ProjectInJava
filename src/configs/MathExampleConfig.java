@@ -19,5 +19,5 @@ public class MathExampleConfig implements Config {
     public int getVersion() {
         return 1;
     }
-    
+
 }
