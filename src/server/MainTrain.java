@@ -1,5 +1,6 @@
 package server;
 
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -8,22 +9,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import test.RequestParser.RequestInfo;
+import server.RequestParser.RequestInfo;
 
 
 public class MainTrain { // RequestParser
-    
+
 
     private static void testParseRequest() {
         // Test data
         String request = "GET /api/resource?id=123&name=test HTTP/1.1\n" +
-                            "Host: example.com\n" +
-                            "Content-Length: 5\n"+
-                            "\n" +
-                            "filename=\"hello_world.txt\"\n"+
-                            "\n" +
-                            "hello world!\n"+
-                            "\n" ;
+                "Host: example.com\n" +
+                "Content-Length: 5\n"+
+                "\n" +
+                "filename=\"hello_world.txt\"\n"+
+                "\n" +
+                "hello world!\n"+
+                "\n" ;
 
         BufferedReader input=new BufferedReader(new InputStreamReader(new ByteArrayInputStream(request.getBytes())));
         try {
@@ -46,7 +47,7 @@ public class MainTrain { // RequestParser
                 for(String s : requestInfo.getUriSegments()){
                     System.out.println(s);
                 }
-            } 
+            }
             // Test parameters
             Map<String, String> expectedParams = new HashMap<>();
             expectedParams.put("id", "123");
@@ -60,18 +61,18 @@ public class MainTrain { // RequestParser
             byte[] expectedContent = "hello world!\n".getBytes();
             if (!Arrays.equals(requestInfo.getContent(), expectedContent)) {
                 System.out.println("Content test failed (-5)");
-            } 
+            }
             input.close();
         } catch (IOException e) {
             System.out.println("Exception occurred during parsing: " + e.getMessage() + " (-5)");
-        }        
+        }
     }
 
 
     public static void testServer() throws Exception{
-		// implement your own tests!
+        // implement your own tests!
     }
-    
+
     public static void main(String[] args) {
         testParseRequest(); // 40 points
         try{
